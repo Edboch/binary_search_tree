@@ -25,7 +25,7 @@ class Tree {
         return node;
     }
 
-    delete(value,node) {
+    delete(value,node = this.root) {
         if (node == null) return node;
 
         if (node.data > value) {
@@ -49,7 +49,7 @@ class Tree {
 
     }
 
-    find(value, node) {
+    find(value, node = this.root) {
         if (node == null) return;
 
         if (node.data > value) {
@@ -59,6 +59,44 @@ class Tree {
             return this.find(value,node.right);
         } 
         return node;
+    }
+
+    levelOrder(cb) {
+        let q = [this.root];
+        let levelOrderList = [];
+        while (q.length) {
+            let node = q[0];
+
+            cb? cb(node) : levelOrderList.push(node.data);
+            if (node.left) q.push(node.left);
+            if (node.right) q.push(node.right);
+            q.shift();
+        }
+        return levelOrderList;
+    }
+
+    inOrder(cb, node = this.root, arr = []) {
+        if (node == null) return;
+        this.inOrder(cb,node.left, arr);
+        cb? cb(node) : arr.push(node.data)
+        this.inOrder(cb,node.right, arr);
+        return arr
+    }
+
+    preOrder(cb, node = this.root, arr = []) {
+        if (node == null) return;
+        cb? cb(node) : arr.push(node.data)
+        this.preOrder(cb,node.left, arr);
+        this.preOrder(cb,node.right, arr);
+        return arr
+    }
+
+    postOrder(cb, node = this.root, arr = []) {
+        if (node == null) return;
+        this.postOrder(cb,node.left, arr);
+        this.postOrder(cb,node.right, arr);
+        cb? cb(node) : arr.push(node.data)
+        return arr
     }
 
     print() {
@@ -112,3 +150,5 @@ function getSuccessor(node) {
 
 let tree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 tree.print();
+
+console.log(tree.postOrder());
