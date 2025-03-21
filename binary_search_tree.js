@@ -99,6 +99,40 @@ class Tree {
         return arr
     }
 
+    height(node) {
+        if (!node) return -1;
+        return Math.max(this.height(node.left),this.height(node.right)) + 1
+    }
+
+    depth(value,currentNode = this.root) {
+        if (currentNode === null) return -1;
+
+        let distance = -1;
+
+        if (currentNode.data === value ||
+            (distance = this.depth(value,currentNode.left)) >= 0 ||
+            (distance = this.depth(value,currentNode.right)) >= 0 ){
+                return distance + 1;
+            }
+
+        return distance;
+    }
+
+    isBalanced(node = this.root) {
+        //returns bool
+       if (node === null) return true;
+
+       let diff = Math.abs(this.height(node.left) - this.height(node.right));
+       if (diff > 1) return false;
+
+       return this.isBalanced(node.left) && this.isBalanced(node.right);
+    }
+
+    rebalance(tree) {
+        let arr = this.inOrder();
+        this.root = buildTree(arr);
+    }
+
     print() {
         prettyPrint(this.root);
     }
@@ -151,4 +185,4 @@ function getSuccessor(node) {
 let tree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 tree.print();
 
-console.log(tree.postOrder());
+console.log(tree.isBalanced());
